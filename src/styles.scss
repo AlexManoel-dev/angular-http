@@ -1,1 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
+// O ~ pega diretamente do node_modules, é como se fosse: "node_modules/"
+// E no final o Angular vai adicionar o bootstrap diretamente no build
+@import '~bootstrap/dist/css/bootstrap.min.css';
