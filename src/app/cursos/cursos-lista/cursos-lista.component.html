@@ -9,7 +9,8 @@
     </div>
   </div>
   <div class="card-body">
-    <table class="table table-hover">
+    <!-- O angular vai pegar o resultado da requisição, e vai guardar na variável local "cursos", que vai ficar disponível no template -->
+    <table class="table table-hover" *ngIf="cursos$ | async as cursos; else loading">
       <thead>
         <tr>
           <th>#</th>
@@ -18,6 +19,7 @@
         </tr>
       </thead>
       <tbody>
+        <!-- Utilizando a variável local que foi declarada acima -->
         <tr *ngFor="let curso of cursos">
           <td>{{ curso.id }}</td>
           <td>{{ curso.nome }}</td>
