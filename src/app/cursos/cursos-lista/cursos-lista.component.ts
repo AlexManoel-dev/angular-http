@@ -55,17 +55,17 @@ export class CursosListaComponent implements OnInit {
       // SUCESSO - pode-se fazer log, atribuir a variável local e etc
       // ERRO - pode-se fazer log, ou também fazer uma lógica parecida com a de cima, com subject e next(true)
       // COMPLETE - pode-se fazer log de que o observable está completo - ELE NÃO IRÁ MAIS EMITIR VALOR
-      this.service.list()
-      .pipe(
+      //this.service.list()
+      //.pipe(
         // Também poderia ser feito dessa forma, e não precisaria do error na parte do subscribe
         // CASO EXISTIR, VÁRIOS OPERADORES DENTRO DO PIPE, O IDEAL É SEMPRE COLOCAR O CATCHERROR COMO O ÚLTIMO OPERADOR, DEPOIS DE MAP, TAP, SWITCHMAP E ETC
         // Porque caso ocorra algum erro dentro desses operadores rxjs, seja o map, tap, switchmap entre outros, é possível capturar e aplicar alguma lógica utilizando o catchError dentro do pipe
-        catchError(error => EMPTY)
-      )
-      .subscribe({
-        next: (v) => {
-          this.cursos$ = v;
-        },
+        //catchError(error => EMPTY)
+      //)
+      //.subscribe({
+        //next: (v) => {
+          //this.cursos$ = v;
+        //},
         // error: (e) => {
         //   catchError(error => {
         //     this.error$.next(true);
@@ -73,7 +73,7 @@ export class CursosListaComponent implements OnInit {
         //   })
         // },
         // complete: () => console.log('completo')
-      });
+      //});
   }
 
   handleError() {
