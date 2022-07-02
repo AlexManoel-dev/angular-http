@@ -1,7 +1,9 @@
+import { AlertModalComponent } from './../../shared/alert-modal/alert-modal.component';
 import { CursosService } from './../cursos.service';
 import { Component, OnInit } from '@angular/core';
 import { Curso } from '../curso';
 import { catchError, EMPTY, Observable, Subject } from 'rxjs';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-cursos-lista',
@@ -11,6 +13,8 @@ import { catchError, EMPTY, Observable, Subject } from 'rxjs';
 })
 export class CursosListaComponent implements OnInit {
 
+  bsModalRef: BsModalRef;
+
   // cursos: Curso[];
 
   // Variáveis com a notação finlandesa, que é o nome da variável e o símbolo "$" no final representam um Observable
@@ -18,7 +22,10 @@ export class CursosListaComponent implements OnInit {
   // O error$ será do tipo boolean, pois, sempre que for emitido um erro, será emitido o valor de TRUE, pra que quando o error$ for consumido, mostre o erro juntamente com o pipe async
   error$ = new Subject<boolean>();
 
-  constructor(private service: CursosService) { }
+  constructor(
+    private service: CursosService,
+    private modalService: BsModalService
+  ) { }
 
   ngOnInit(): void {
     // this.service.list()
@@ -34,7 +41,9 @@ export class CursosListaComponent implements OnInit {
         catchError(error => {
           console.error(error);
           // Se existir algum erro, o error$ emitirá o valor de TRUE, que será usado dentro do *ngIf
-          this.error$.next(true);
+          // this.error$.next(true);
+          // Função com alert-modal criada abaixo
+          this.handleError();
           return EMPTY;
         })
       );
@@ -63,6 +72,12 @@ export class CursosListaComponent implements OnInit {
         // },
         // complete: () => console.log('completo')
       });
+  }
+
+  handleError() {
+    this.bsModalRef = this.modalService.show(AlertModalComponent);
+    this.bsModalRef.content.type = 'danger';
+    this.bsModalRef.content.message = 'Erro ao carregar cursos. Tente novamente mais tarde.';
   }
 
 }
