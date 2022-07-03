@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertModalService } from './../../shared/alert-modal.service';
 import { AlertModalComponent } from './../../shared/alert-modal/alert-modal.component';
 import { CursosService } from './../cursos.service';
@@ -26,7 +27,9 @@ export class CursosListaComponent implements OnInit {
   constructor(
     private service: CursosService,
     // private modalService: BsModalService
-    private alertService: AlertModalService
+    private alertService: AlertModalService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -83,4 +86,9 @@ export class CursosListaComponent implements OnInit {
     // this.bsModalRef.content.message = 'Erro ao carregar cursos. Tente novamente mais tarde.';
   }
 
+  onEdit(id: number) {
+    this.router.navigate(['editar', id], { relativeTo: this.route }); // relativeTo: representa que a rota a ser navegada vai ser relativa a atual portanto, "cursos/editar/:id"
+    // Também da pra fazer assim, mas o jeito acima talvez se encaixa melhor na maioria das situações
+    // this.router.navigate(['cursos/editar', id]);
+  }
 }
