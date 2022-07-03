@@ -21,17 +21,23 @@ export class AlertModalService {
  * Jeito de evitar a duplicação de código
  * A pessoa que estiver desenvolvendo, vai chamar só os métodos que não são o private, e vai passar somente a mensagem
  */
-  private showAlert(message: string, type: AlertTypes) {
+  private showAlert(message: string, type: AlertTypes, dismissTimeout?: number) {
     const bsModalRef: BsModalRef = this.modalService.show(AlertModalComponent);
     bsModalRef.content.type = type;
     bsModalRef.content.message = message;
+
+    if (dismissTimeout) {
+      setTimeout(() => {
+        bsModalRef.hide();
+      }, dismissTimeout);
+    }
   }
 
   showAlertDanger(message: string) {
-    this.showAlert(message, AlertTypes.DANGER)
+    this.showAlert(message, AlertTypes.DANGER);
   }
 
   showAlertSuccess(message: string) {
-    this.showAlert(message, AlertTypes.SUCCESS)
+    this.showAlert(message, AlertTypes.SUCCESS, 3000);
   }
 }

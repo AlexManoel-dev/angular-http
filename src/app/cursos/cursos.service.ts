@@ -1,3 +1,4 @@
+import { take } from 'rxjs/operators';
 import { environment } from './../../environments/environment';
 import { Curso } from './curso';
 import { Injectable } from '@angular/core';
@@ -20,5 +21,9 @@ export class CursosService {
         delay(2000),
         tap(console.log)
       )
+  }
+
+  create(curso: Curso) {
+    return this.http.post<Curso[]>(this.API, curso).pipe(take(1));
   }
 }
