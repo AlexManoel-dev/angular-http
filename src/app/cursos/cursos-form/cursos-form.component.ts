@@ -51,20 +51,20 @@ export class CursosFormComponent implements OnInit {
      * Essa é uma das raras exceções que não é preciso ser feito o unsubscribe manualmente
      * E o loadByID() já tem o take(1) no service, pra não precisar ser feito o unsubscribe
      */
-    this.route.params
-    .pipe(
-      map((params: any) => params['id']),
-      /**
-       * O route.params continuará sendo observado, e caso ele seja modificado a gente vai ter outra chamada pro servidor com o ID em questão
-       * E no caso, como estamos modificando o parâmetro, a gente não está interessado nos outros ID's que foram chamados, e sim somente na última requisição
-       * O switchMap cancela as requisições anteriores, e apenas devolve o valor do último pedido
-       */
-      switchMap(id => this.service.loadByID(id))
-      // Se eu quisesse pegar as aulas do curso, eu poderia fazer:
-      // switchMap(curso => obterAulas())
-    )
-    // O valor recebido no subscribe, é o valor retornado pelo último observable, no caso, o switchMap
-    .subscribe(curso => this.updateForm(curso));
+    // this.route.params
+    // .pipe(
+    //   map((params: any) => params['id']),
+    //   /**
+    //    * O route.params continuará sendo observado, e caso ele seja modificado a gente vai ter outra chamada pro servidor com o ID em questão
+    //    * E no caso, como estamos modificando o parâmetro, a gente não está interessado nos outros ID's que foram chamados, e sim somente na última requisição
+    //    * O switchMap cancela as requisições anteriores, e apenas devolve o valor do último pedido
+    //    */
+    //   switchMap(id => this.service.loadByID(id))
+    //   // Se eu quisesse pegar as aulas do curso, eu poderia fazer:
+    //   // switchMap(curso => obterAulas())
+    // )
+    // // O valor recebido no subscribe, é o valor retornado pelo último observable, no caso, o switchMap
+    // .subscribe(curso => this.updateForm(curso));
 
     // Operadores RxJS que podem ser úteis
     // concatMap -> ordem da requisição importa
@@ -72,15 +72,21 @@ export class CursosFormComponent implements OnInit {
     // exhaustMap -> casos de login(basicamente faz a requisição e obtém a resposta, antes de partir para a segunda tentativa)
     // Ex: faz o pedido 1, espera a resposta, e depois faz a requisição do pedido 2, pra obter a resposta, e depois fazer o pedido 3 e obter a resposta, e assim vai...
 
+    const curso = this.route.snapshot.data['curso'];
+
+    // Quando o formulário for inicializado, o curso já existirá, portanto não será necessário o uso do updateForm
     this.form = this.fb.group({
-      id: [null],
-      nome: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(250)]]
+      // Se for criação, será retornado o valor null como primeiro value. Já se for edição, tanto o id quanto o nome terão valores, e o formulário já vai ser inicializado com os mesmos
+      // BASICAMENTE VAI TRAZER MAIS PERFORMANCE A APLICAÇÃO. MAIS AGILIDADE NA HORA DE TRAZER OS DADOS EXISTENTES
+      id: [curso.id],
+      nome: [curso.nome, [Validators.required, Validators.minLength(3), Validators.maxLength(250)]]
     });
   }
 
   /**
    * É possível colocar o código desse método dentro do curso$.subscribe, porém fazer com métodos fica muito melhor, e mais legível o código
    * @param curso - Curso recebido
+   * Não vai ser necessário fazer o patchValue mais, pois o curso já está todo dentro da const curso, antes do form
    */
   updateForm(curso: Curso) {
     this.form.patchValue({
