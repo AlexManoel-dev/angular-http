@@ -104,21 +104,52 @@ export class CursosFormComponent implements OnInit {
     console.log(this.form.value);
     if(this.form.valid) {
       console.log('Submit');
-      this.service.create(this.form.value).subscribe({
-        next: (v) => {
-          this.modal.showAlertSuccess('Curso criado com sucesso!');
-          // Usando o location
-          // this.location.back();
-          // Ou usando o navigate
+      let msgSuccess = 'Curso criado com sucesso!';
+      let msgError = 'Erro ao criar curso, tente novamente!';
+      if(this.form.value.id){
+        msgSuccess = 'Curso atualizado com sucesso!';
+        msgError = 'Erro ao atualizar curso, tente novamente!';
+      }
+      this.service.save(this.form.value).subscribe({
+        next: (s) => {
+          this.modal.showAlertSuccess(msgSuccess);
           setTimeout(() => {
             this.router.navigate(['/cursos']);
           }, 3000);
         },
         error: (e) => {
-          this.modal.showAlertDanger('Erro ao criar curso, tente novamente!');
-        },
-        complete: () => console.log('Request completa')
-    });
+          this.modal.showAlertDanger(msgError);
+        }
+      })
+      // CÓDIGO ACIMA, MESMA LÓGICA DO QUE O DE BAIXO, PORÉM REFATORADO
+      /*if(this.form.value.id){
+        this.service.update(this.form.value).subscribe({
+          next: (v) => {
+            this.modal.showAlertSuccess('Curso editado com sucesso!')
+            setTimeout(() => {
+              this.router.navigate(['/cursos']);
+            }, 3000);
+          },
+          error: e => this.modal.showAlertDanger('Erro ao editar curso, tente novamente!'),
+          complete: () => console.log('Update completo')
+        })
+      } else {
+        this.service.create(this.form.value).subscribe({
+          next: (v) => {
+            this.modal.showAlertSuccess('Curso criado com sucesso!');
+            // Usando o location
+            // this.location.back();
+            // Ou usando o navigate
+            setTimeout(() => {
+              this.router.navigate(['/cursos']);
+            }, 3000);
+          },
+          error: (e) => {
+            this.modal.showAlertDanger('Erro ao criar curso, tente novamente!');
+          },
+          complete: () => console.log('Request completa')
+      });
+      }*/
     }
   }
   
