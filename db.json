@@ -31,26 +31,6 @@
     {
       "nome": "Material 5",
       "id": 8
-    },
-    {
-      "nome": "Material 6",
-      "id": 9
-    },
-    {
-      "nome": "Material 7",
-      "id": 10
-    },
-    {
-      "nome": "Material 8",
-      "id": 11
-    },
-    {
-      "id": 12,
-      "nome": "ReactJS"
-    },
-    {
-      "id": 13,
-      "nome": "HTML Vanilla"
     }
   ]
 }

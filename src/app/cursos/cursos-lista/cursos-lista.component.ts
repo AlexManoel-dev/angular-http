@@ -2,7 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertModalService } from './../../shared/alert-modal.service';
 import { AlertModalComponent } from './../../shared/alert-modal/alert-modal.component';
 import { CursosService } from './../cursos.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Curso } from '../curso';
 import { catchError, EMPTY, Observable, Subject } from 'rxjs';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -17,6 +17,12 @@ export class CursosListaComponent implements OnInit {
 
   // bsModalRef: BsModalRef;
 
+  deleteModalRef: BsModalRef;
+
+  @ViewChild('deleteModal') deleteModal: any;
+
+  cursoSelecionado: Curso;
+
   // cursos: Curso[];
 
   // Variáveis com a notação finlandesa, que é o nome da variável e o símbolo "$" no final representam um Observable
@@ -26,7 +32,7 @@ export class CursosListaComponent implements OnInit {
 
   constructor(
     private service: CursosService,
-    // private modalService: BsModalService
+    private modalService: BsModalService,
     private alertService: AlertModalService,
     private router: Router,
     private route: ActivatedRoute
@@ -90,5 +96,29 @@ export class CursosListaComponent implements OnInit {
     this.router.navigate(['editar', id], { relativeTo: this.route }); // relativeTo: representa que a rota a ser navegada vai ser relativa a atual portanto, "cursos/editar/:id"
     // Também da pra fazer assim, mas o jeito acima talvez se encaixa melhor na maioria das situações
     // this.router.navigate(['cursos/editar', id]);
+  }
+
+  onDelete(curso: Curso) {
+    this.cursoSelecionado = curso;
+    this.deleteModalRef = this.modalService.show(this.deleteModal, { class: 'modal-sm' });
+  }
+
+  onConfirmDelete(): void {
+    this.service.remove(this.cursoSelecionado.id)
+      .subscribe({
+        next: (v) => {
+          this.onRefresh();
+          this.deleteModalRef?.hide();
+        },
+        error: (e) => {
+          this.alertService.showAlertDanger('Erro ao remover curso. Tente novamente mais tarde.');
+          this.deleteModalRef?.hide();
+        },
+        complete: () => console.info('complete')
+      });
+  }
+ 
+  onDeclineDelete(): void {
+    this.deleteModalRef?.hide();
   }
 }
